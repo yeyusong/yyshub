@@ -2,7 +2,7 @@
  * @Author: yeyusong
  * @Date: 2021-03-15 13:56:30
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-03-24 18:03:32
+ * @LastEditTime: 2021-03-29 17:10:30
  * @Description:
  */
 const jwt = require('jsonwebtoken')
@@ -62,11 +62,13 @@ const verifyAuth = async (ctx, next) => {
 
 const verifyPermission = async (ctx, next) => {
   // 获取参数
-  const { momentId } = ctx.params
+  const [resKey] = Object.keys(ctx.params)
+  const tableName = resKey.replace('Id', '')
+  const resId = ctx.params[resKey]
   const { id } = ctx.user
   // 查询是否有权限
   try {
-    const isPermission = await authService.checkMoment(momentId, id)
+    const isPermission = await authService.checkResource(tableName, resId, id)
     if (!isPermission) throw new Error()
     await next()
   } catch (err) {

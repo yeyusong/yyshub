@@ -2,7 +2,7 @@
  * @Author: yeyusong
  * @Date: 2021-03-26 14:10:24
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-03-26 15:57:01
+ * @LastEditTime: 2021-03-29 17:26:56
  * @Description:
  */
 const connection = require('../app/database')
@@ -26,6 +26,18 @@ class CommentService {
       userId,
       commentId,
     ])
+    return res
+  }
+
+  async update(commentId, content) {
+    const statement = `UPDATE comment SET content = ? WHERE id = ?`
+    const [res] = await connection.execute(statement, [content, commentId])
+    return res
+  }
+
+  async remove(commentId) {
+    const statement = `DELETE FROM comment WHERE id = ?`
+    const [res] = await connection.execute(statement, [commentId])
     return res
   }
 }

@@ -2,7 +2,7 @@
  * @Author: yeyusong
  * @Date: 2021-03-26 13:30:27
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-03-26 15:55:20
+ * @LastEditTime: 2021-03-29 17:24:20
  * @Description:
  */
 const service = require('../service/comment.service.js')
@@ -16,9 +16,24 @@ class CommentController {
   }
 
   async reply(ctx, next) {
-    const { momentId, content, commentId } = ctx.request.body
+    const { momentId, content } = ctx.request.body
+    const { commentId } = ctx.params
     const { id } = ctx.user
     const res = await service.reply(momentId, content, id, commentId)
+    ctx.body = res
+  }
+
+  async update(ctx, next) {
+    const { commentId } = ctx.params
+    const { content } = ctx.request.body
+    const res = await service.update(commentId, content)
+    ctx.body = res
+    // ctx.body = '修改评论'
+  }
+
+  async remove(ctx, next) {
+    const { commentId } = ctx.params
+    const res = await service.remove(commentId)
     ctx.body = res
   }
 }

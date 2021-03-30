@@ -2,7 +2,7 @@
  * @Author: yeyusong
  * @Date: 2021-03-26 13:30:27
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-03-29 17:24:20
+ * @LastEditTime: 2021-03-30 11:38:42
  * @Description:
  */
 const service = require('../service/comment.service.js')
@@ -34,6 +34,12 @@ class CommentController {
   async remove(ctx, next) {
     const { commentId } = ctx.params
     const res = await service.remove(commentId)
+    ctx.body = res
+  }
+
+  async list(ctx, next) {
+    const { momentId } = ctx.query
+    const res = await service.getCommentsByMomentId(momentId)
     ctx.body = res
   }
 }

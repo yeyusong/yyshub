@@ -2,7 +2,7 @@
  * @Author: yeyusong
  * @Date: 2021-03-22 15:30:16
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-03-30 13:50:01
+ * @LastEditTime: 2021-03-30 17:26:15
  * @Description:
  */
 const connection = require('../app/database')
@@ -61,6 +61,18 @@ class MomentService {
     const statement = `DELETE FROM moment WHERE id = ? ;`
     const [result] = await connection.execute(statement, [momentId])
     return result
+  }
+
+  async hasLabel(momentId, labelId) {
+    const statement = `SELECT * FROM moment_lable WHERE moment_id = ? AND label_id = ?`
+    const [res] = await connection.execute(statement, [momentId, labelId])
+    return res[0] ? true : false
+  }
+
+  async addLabel(momentId, labelId) {
+    const statement = `INSERT INTO moment_lable (moment_id,label_id) VALUES (?,?)`
+    const [res] = await connection.execute(statement, [momentId, labelId])
+    return res
   }
 }
 

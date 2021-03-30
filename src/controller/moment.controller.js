@@ -2,7 +2,7 @@
  * @Author: yeyusong
  * @Date: 2021-03-22 14:38:30
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-03-26 09:13:22
+ * @LastEditTime: 2021-03-30 17:24:57
  * @Description:
  */
 const momentService = require('../service/moment.service')
@@ -43,6 +43,18 @@ class MomentController {
     const { momentId } = ctx.params
     const res = await momentService.remove(momentId)
     ctx.body = res
+  }
+
+  async addLabels(ctx, next) {
+    const { labels } = ctx
+    const { momentId } = ctx.params
+    for (let label of labels) {
+      const isExist = await momentService.hasLabel(momentId, label.id)
+      if (!isExist) {
+        await momentService.addLabel(momentId, label.id)
+      }
+    }
+    ctx.body = '动态添加标签成功'
   }
 }
 module.exports = new MomentController()

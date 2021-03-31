@@ -2,7 +2,7 @@
  * @Author: yeyusong
  * @Date: 2021-03-30 14:27:38
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-03-30 16:20:43
+ * @LastEditTime: 2021-03-31 09:36:34
  * @Description:
  */
 const connection = require('../app/database')
@@ -17,6 +17,12 @@ class LabelService {
     const statement = `SELECT * FROM label WHERE name = ?;`
     const [res] = await connection.execute(statement, [name])
     return res[0]
+  }
+
+  async getLabels(limit, offset) {
+    const statement = `SELECT * FROM label LIMIT ?,?;`
+    const [res] = await connection.execute(statement, [offset, limit])
+    return res
   }
 }
 

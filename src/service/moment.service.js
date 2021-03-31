@@ -2,19 +2,10 @@
  * @Author: yeyusong
  * @Date: 2021-03-22 15:30:16
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-03-30 17:26:15
+ * @LastEditTime: 2021-03-31 13:32:22
  * @Description:
  */
 const connection = require('../app/database')
-
-const sqlFragment = `
-  SELECT 
-    m.id id, m.content content,m.createAt createTime,m.updateAt updateTime,
-    JSON_OBJECT('id',u.id,'name',u.name) author,
-    (SELECT COUNT(*) FROM comment c WHERE c.moment_id = m.id) commentCount
-  FROM moment m
-  LEFT JOIN users u ON m.user_id = u.id
-`
 
 class MomentService {
   async create(userId, content) {
@@ -28,15 +19,17 @@ class MomentService {
     SELECT
       m.id id,m.content content,m.createAt createTime,m.updateAt updateTime,
       JSON_OBJECT('id',u.id,'name',u.name) author,
-      JSON_ARRAYAGG(
+      IF(COUNT(l.id),JSON_ARRAYAGG(JSON_OBJECT('id',l.id,'name',l.name)),NULL) labels,
+      (SELECT IF(COUNT(c.id),JSON_ARRAYAGG(
         JSON_OBJECT('id',c.id,'content',c.content,'commentId',c.comment_id,'createTime',c.createAt,
           'user',JSON_OBJECT('id',cu.id,'name',cu.name))
-      ) comments
+      ),NULL) FROM comment c LEFT JOIN users cu ON c.user_id = cu.id WHERE m.id = c.moment_id) comments
     FROM moment m
     LEFT JOIN users u ON m.user_id = u.id
-    LEFT JOIN comment c ON c.moment_id = m.id
-    LEFT JOIN users cu ON c.user_id = cu.id
-    WHERE m.id = 2
+    LEFT JOIN moment_lable ml ON m.id = ml.moment_id
+    LEFT JOIN label l ON ml.label_id = l.id
+    WHERE m.id = ?
+    GROUP BY m.id
   `
     const [result] = await connection.execute(statement, [id])
     return result[0]
@@ -44,7 +37,13 @@ class MomentService {
 
   async getMomentList(offset, size) {
     const statement = `
-    ${sqlFragment}
+    SELECT 
+      m.id id,m.content content,m.createAt createTime,m.updateAt updateTime,
+      JSON_OBJECT('id',u.id,'name',u.name) author,
+      (SELECT COUNT(*) FROM comment c WHERE c.moment_id = m.id) commentCount,
+      (SELECT COUNT(*) FROM moment_lable ml WHERE ml.moment_id = m.id) labelCount
+    FROM moment m
+    LEFT JOIN users u ON m.user_id = u.id
     LIMIT ?,?;
     `
     const [result] = await connection.execute(statement, [offset, size])

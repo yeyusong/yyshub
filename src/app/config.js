@@ -2,7 +2,7 @@
  * @Author: yeyusong
  * @Date: 2021-03-12 10:28:04
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-03-22 13:21:02
+ * @LastEditTime: 2021-04-02 16:05:58
  * @Description:
  */
 const dotenv = require('dotenv')
@@ -17,6 +17,7 @@ const PRIVATE_KEY = fs.readFileSync(
 const PUBLIC_KEY = fs.readFileSync(path.resolve(__dirname, './keys/public.key'))
 
 module.exports = {
+  APP_HOST,
   APP_PORT,
   MYSQL_HOST,
   MYSQL_PORT,

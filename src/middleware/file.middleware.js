@@ -6,7 +6,7 @@
  * @Description:
  */
 const Multer = require('koa-multer')
-const { AVATAR_PATH } = require('../constants/path-types')
+const { AVATAR_PATH } = require('../constants/file-path')
 
 const avatarUpload = Multer({
   dest: AVATAR_PATH,

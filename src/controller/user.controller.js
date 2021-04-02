@@ -2,13 +2,13 @@
  * @Author: yeyusong
  * @Date: 2021-03-12 11:44:33
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-04-02 15:25:07
+ * @LastEditTime: 2021-04-02 15:48:50
  * @Description:
  */
 const fs = require('fs')
 const userService = require('../service/user.service')
 const fileService = require('../service/file.service')
-const { AVATAR_PATH } = require('../constants/path-types')
+const { AVATAR_PATH } = require('../constants/file-path')
 class UserController {
   async create(ctx, next) {
     // 获取用户传递的参数

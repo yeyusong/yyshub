@@ -2,7 +2,7 @@
  * @Author: yeyusong
  * @Date: 2021-03-22 15:30:16
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-03-31 13:32:22
+ * @LastEditTime: 2021-04-02 16:16:26
  * @Description:
  */
 const connection = require('../app/database')
@@ -18,11 +18,11 @@ class MomentService {
     const statement = `
     SELECT
       m.id id,m.content content,m.createAt createTime,m.updateAt updateTime,
-      JSON_OBJECT('id',u.id,'name',u.name) author,
+      JSON_OBJECT('id',u.id,'name',u.name,'avatarUrl',u.avatar_url) author,
       IF(COUNT(l.id),JSON_ARRAYAGG(JSON_OBJECT('id',l.id,'name',l.name)),NULL) labels,
       (SELECT IF(COUNT(c.id),JSON_ARRAYAGG(
         JSON_OBJECT('id',c.id,'content',c.content,'commentId',c.comment_id,'createTime',c.createAt,
-          'user',JSON_OBJECT('id',cu.id,'name',cu.name))
+          'user',JSON_OBJECT('id',cu.id,'name',cu.name,'avatarUrl',cu.avatar_url))
       ),NULL) FROM comment c LEFT JOIN users cu ON c.user_id = cu.id WHERE m.id = c.moment_id) comments
     FROM moment m
     LEFT JOIN users u ON m.user_id = u.id

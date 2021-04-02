@@ -2,7 +2,7 @@
  * @Author: yeyusong
  * @Date: 2021-03-31 15:03:40
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-03-31 15:10:49
+ * @LastEditTime: 2021-04-02 15:10:31
  * @Description:
  */
 const connection = require('../app/database')
@@ -17,6 +17,12 @@ class FileService {
       userId,
     ])
     return res
+  }
+
+  async getAvatarByUserId(userId) {
+    const statement = `SELECT * FROM avatar WHERE user_id = ?;`
+    const [res] = await connection.execute(statement, [userId])
+    return res[0]
   }
 }
 

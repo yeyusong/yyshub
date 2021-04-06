@@ -2,7 +2,7 @@
  * @Author: yeyusong
  * @Date: 2021-03-22 14:31:35
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-03-30 15:47:11
+ * @LastEditTime: 2021-04-06 11:30:30
  * @Description:
  */
 const Router = require('koa-router')
@@ -16,6 +16,7 @@ const {
   update,
   remove,
   addLabels,
+  fileInfo,
 } = require('../controller/moment.controller')
 const {
   verifyAuth,
@@ -37,5 +38,6 @@ momentRouter.post(
   verifyLabelExists,
   addLabels
 )
+momentRouter.get('/images/:filename', fileInfo)
 
 module.exports = momentRouter

@@ -2,10 +2,13 @@
  * @Author: yeyusong
  * @Date: 2021-03-22 14:38:30
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-03-30 17:24:57
+ * @LastEditTime: 2021-04-06 11:38:54
  * @Description:
  */
+const fs = require('fs')
+const fileService = require('../service/file.service')
 const momentService = require('../service/moment.service')
+const { PICTURE_PATH } = require('../constants/file-path')
 
 class MomentController {
   async create(ctx, next) {
@@ -55,6 +58,13 @@ class MomentController {
       }
     }
     ctx.body = '动态添加标签成功'
+  }
+
+  async fileInfo(ctx, next) {
+    const { filename } = ctx.params
+    const fileInfo = await fileService.getFileByFilename(filename)
+    ctx.response.set('content-type', fileInfo.mimetype)
+    ctx.body = fs.createReadStream(`${PICTURE_PATH}/${filename}`)
   }
 }
 module.exports = new MomentController()

@@ -2,7 +2,7 @@
  * @Author: yeyusong
  * @Date: 2021-03-22 14:38:30
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-04-06 11:38:54
+ * @LastEditTime: 2021-04-06 15:37:11
  * @Description:
  */
 const fs = require('fs')
@@ -61,8 +61,14 @@ class MomentController {
   }
 
   async fileInfo(ctx, next) {
-    const { filename } = ctx.params
+    let { filename } = ctx.params
     const fileInfo = await fileService.getFileByFilename(filename)
+    const { type } = ctx.query
+    const types = ['small', 'middle', 'large']
+    if (types.some((item) => item === type)) {
+      filename = filename + '-' + type
+    }
+
     ctx.response.set('content-type', fileInfo.mimetype)
     ctx.body = fs.createReadStream(`${PICTURE_PATH}/${filename}`)
   }

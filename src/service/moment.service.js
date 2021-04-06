@@ -2,7 +2,7 @@
  * @Author: yeyusong
  * @Date: 2021-03-22 15:30:16
  * @LastEditors: yeyusong
- * @LastEditTime: 2021-04-06 11:49:23
+ * @LastEditTime: 2021-04-06 15:34:18
  * @Description:
  */
 const connection = require('../app/database')
@@ -24,7 +24,7 @@ class MomentService {
         JSON_OBJECT('id',c.id,'content',c.content,'commentId',c.comment_id,'createTime',c.createAt,
           'user',JSON_OBJECT('id',cu.id,'name',cu.name,'avatarUrl',cu.avatar_url))
       ),NULL) FROM comment c LEFT JOIN users cu ON c.user_id = cu.id WHERE m.id = c.moment_id) comments,
-      (SELECT JSON_ARRAYAGG(CONCAT('http://localhost:8000/moment/images/',file.filename)) FROM file WHERE m.id = file.moment_id) images
+      (SELECT JSON_ARRAYAGG(CONCAT('http://localhost:8888/moment/images/',file.filename)) FROM file WHERE m.id = file.moment_id) images
     FROM moment m
     LEFT JOIN users u ON m.user_id = u.id
     LEFT JOIN moment_lable ml ON m.id = ml.moment_id
@@ -43,7 +43,7 @@ class MomentService {
       JSON_OBJECT('id',u.id,'name',u.name) author,
       (SELECT COUNT(*) FROM comment c WHERE c.moment_id = m.id) commentCount,
       (SELECT COUNT(*) FROM moment_lable ml WHERE ml.moment_id = m.id) labelCount,
-      (SELECT JSON_ARRAYAGG(CONCAT('http://localhost:8000/moment/images/',file.filename)) FROM file WHERE m.id = file.moment_id) images
+      (SELECT JSON_ARRAYAGG(CONCAT('http://localhost:8888/moment/images/',file.filename)) FROM file WHERE m.id = file.moment_id) images
     FROM moment m
     LEFT JOIN users u ON m.user_id = u.id
     LIMIT ?,?;
